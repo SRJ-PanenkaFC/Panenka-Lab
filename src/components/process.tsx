@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -37,16 +36,20 @@ export function Process() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    const panels = gsap.utils.toArray(".process-panel");
-    
-    gsap.to(panels, {
-      xPercent: -100 * (panels.length - 1),
+    const getScrollAmount = () => {
+      const scrollWidth = scrollContainerRef.current?.scrollWidth || 0;
+      return -(scrollWidth - window.innerWidth);
+    };
+
+    gsap.to(scrollContainerRef.current, {
+      x: getScrollAmount,
       ease: "none",
       scrollTrigger: {
         trigger: containerRef.current,
         pin: true,
         scrub: 1,
-        end: () => "+=" + scrollContainerRef.current!.offsetWidth,
+        end: () => `+=${scrollContainerRef.current?.scrollWidth || window.innerWidth}`,
+        invalidateOnRefresh: true,
       },
     });
   }, { scope: containerRef });
@@ -61,30 +64,32 @@ export function Process() {
         </h2>
       </div>
 
-      <div ref={scrollContainerRef} className="flex w-[400vw] h-full items-center">
-        {steps.map((step, index) => (
-          <div key={index} className="process-panel w-[100vw] h-full flex items-center justify-center relative px-6 md:px-24">
-            <div className="max-w-2xl w-full bg-white/5 backdrop-blur-xl border border-white/10 p-10 md:p-16 rounded-[40px] relative overflow-hidden group hover:bg-white/10 transition-colors duration-500">
-              
-              <div className="absolute -top-20 -right-20 w-64 h-64 bg-purple-500/20 rounded-full blur-[80px] group-hover:bg-blue-500/30 transition-colors duration-700" />
-              
-              <div className="relative z-10">
-                <Magnetic>
-                  <div className="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-white/10 stroke-white mb-8 select-none">
-                    {step.number}
-                  </div>
-                </Magnetic>
-                <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                  {step.title}
-                </h3>
-                <p className="text-xl text-gray-400 leading-relaxed">
-                  {step.description}
-                </p>
+      <div className="flex h-full items-center">
+        <div ref={scrollContainerRef} className="flex h-full items-center gap-10 md:gap-16 px-[10vw] lg:px-[15vw] w-max">
+          {steps.map((step, index) => (
+            <div key={index} className="process-panel w-[85vw] md:w-[600px] flex-shrink-0 relative">
+              <div className="w-full bg-white/5 backdrop-blur-xl border border-white/10 p-10 md:p-16 rounded-[40px] relative overflow-hidden group hover:bg-white/10 transition-colors duration-500">
+                
+                <div className="absolute -top-20 -right-20 w-64 h-64 bg-purple-500/20 rounded-full blur-[80px] group-hover:bg-blue-500/30 transition-colors duration-700" />
+                
+                <div className="relative z-10">
+                  <Magnetic>
+                    <div className="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-white/10 stroke-white mb-8 select-none">
+                      {step.number}
+                    </div>
+                  </Magnetic>
+                  <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                    {step.title}
+                  </h3>
+                  <p className="text-xl text-gray-400 leading-relaxed">
+                    {step.description}
+                  </p>
+                </div>
+                
               </div>
-              
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

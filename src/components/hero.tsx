@@ -9,7 +9,6 @@ import { useGSAP } from "@gsap/react";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { Magnetic } from "@/components/magnetic";
 import { Typewriter } from "@/components/typewriter";
-import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
