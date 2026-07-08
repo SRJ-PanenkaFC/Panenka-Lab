@@ -43,7 +43,7 @@ export function Navbar() {
           Panenka<span className="text-purple-500">Lab.</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-8 bg-white/5 border border-white/10 rounded-full px-8 py-3 backdrop-blur-md shadow-lg">
           {navLinks.map((link) => (
             <Magnetic key={link.name}>
               <Link
