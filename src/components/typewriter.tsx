@@ -38,7 +38,7 @@ export function Typewriter({ words }: { words: string[] }) {
 
   return (
     <div className="inline-flex items-center min-w-[2ch]">
-      <span>{words[index].substring(0, subIndex)}</span>
+      <span>{words[index].substring(0, subIndex)}{'\u200B'}</span>
       <motion.span
         animate={{ opacity: [1, 0] }}
         transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
