@@ -30,6 +30,23 @@ export function Trust() {
         scrub: true,
       },
     });
+
+    gsap.fromTo(".stat-item",
+      { y: 80, opacity: 0, scale: 0.8 },
+      {
+        y: 0,
+        opacity: 1,
+        scale: 1,
+        stagger: 0.1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 85%",
+          end: "center center",
+          scrub: 1,
+        }
+      }
+    );
   }, { scope: containerRef });
 
   return (
@@ -49,13 +66,9 @@ export function Trust() {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 divide-x divide-white/10">
           {stats.map((stat, index) => (
-            <motion.div
+            <div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="flex flex-col items-center justify-center text-center px-4"
+              className="stat-item flex flex-col items-center justify-center text-center px-4"
             >
               <div className="text-4xl md:text-6xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 mb-2">
                 {stat.value}
@@ -63,7 +76,7 @@ export function Trust() {
               <div className="text-xs md:text-sm font-semibold text-purple-400 uppercase tracking-widest">
                 {stat.label}
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

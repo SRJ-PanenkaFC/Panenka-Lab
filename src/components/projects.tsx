@@ -51,15 +51,25 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
         }
       }
     );
+    gsap.fromTo(".project-details-" + index,
+      { y: 80, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ref.current,
+          start: "top 80%",
+          end: "center center",
+          scrub: 1,
+        }
+      }
+    );
   }, { scope: ref });
 
   return (
-    <motion.div
+    <div
       ref={ref}
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.7 }}
       className={`flex flex-col lg:flex-row gap-12 lg:gap-24 items-center ${
         index % 2 !== 0 ? "lg:flex-row-reverse" : ""
       }`}
@@ -87,7 +97,7 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
       </div>
 
       {/* Project Details */}
-      <div className="w-full lg:w-1/2 space-y-8">
+      <div className={`project-details-${index} w-full lg:w-1/2 space-y-8`}>
         <div className="text-sm font-semibold tracking-wider text-purple-400 uppercase flex items-center gap-4">
           <span className="w-12 h-[1px] bg-purple-500"></span>
           {project.category}
@@ -109,7 +119,7 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
           ))}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
