@@ -19,6 +19,7 @@ export const metadata: Metadata = {
 
 import { SmoothScrolling } from "@/components/smooth-scrolling";
 import { CustomCursor } from "@/components/cursor";
+import { Particles } from "@/components/particles";
 
 export default function RootLayout({
   children,
@@ -32,7 +33,8 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-[#050505] text-white">
         <CustomCursor />
-        <div className="fixed inset-0 bg-noise pointer-events-none z-50" />
+        <Particles />
+        <div className="fixed inset-0 bg-noise pointer-events-none z-[100]" />
         <SmoothScrolling>{children}</SmoothScrolling>
       </body>
     </html>
