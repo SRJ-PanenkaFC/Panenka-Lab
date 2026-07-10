@@ -29,9 +29,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased overflow-x-hidden w-full`}
     >
-      <body className="min-h-full flex flex-col bg-[#050505] text-white">
+      <body className="min-h-full flex flex-col bg-[#050505] text-white overflow-x-hidden w-full">
         <CustomCursor />
         <Particles />
         <div className="fixed inset-0 bg-noise pointer-events-none z-[100]" />
