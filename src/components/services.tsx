@@ -9,6 +9,8 @@ import ScrollTrigger from "gsap/ScrollTrigger";
 import { Magnetic } from "@/components/magnetic";
 import { SpotlightCard } from "@/components/spotlight-card";
 
+import { TextReveal } from "@/components/text-reveal";
+
 const services = [
   {
     icon: <Layout className="w-8 h-8 text-purple-400" />,
@@ -96,15 +98,9 @@ export function Services() {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center max-w-2xl mx-auto mb-20">
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-4"
-          >
-            End-to-End <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">Capabilities</span>
-          </motion.h2>
+          <div className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-4">
+            <TextReveal text="End-to-End Capabilities" />
+          </div>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
