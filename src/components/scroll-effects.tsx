@@ -59,14 +59,11 @@ export function ScrollEffects() {
         // Set perspective on the section itself for 3D transforms
         gsap.set(section, { perspective: 1200, transformStyle: "preserve-3d" });
         
-        // Select individual elements to create a granular 3D explosion effect
-        const elements = section.querySelectorAll("h1, h2, h3, h4, h5, h6, p, a, button, img, .service-card-wrapper, .glass-card, .process-panel");
+        // Animate the direct children of the section
+        const children = section.children;
         
-        if (elements.length > 0) {
-          // Ensure elements preserve 3D space
-          gsap.set(elements, { transformStyle: "preserve-3d" });
-          
-          gsap.fromTo(elements,
+        if (children.length > 0) {
+          gsap.fromTo(children,
             {
               x: 0,
               y: 0,
@@ -78,15 +75,15 @@ export function ScrollEffects() {
               opacity: 1
             },
             {
-              z: () => gsap.utils.random(100, 500),
-              x: () => gsap.utils.random(-300, 300),
-              y: () => gsap.utils.random(-300, 300),
-              rotationX: () => gsap.utils.random(-60, 60),
-              rotationY: () => gsap.utils.random(-60, 60),
-              rotationZ: () => gsap.utils.random(-30, 30),
-              scale: () => gsap.utils.random(0.5, 1.5),
+              z: () => gsap.utils.random(100, 300),
+              x: () => gsap.utils.random(-100, 100),
+              y: () => gsap.utils.random(-100, 100),
+              rotationX: () => gsap.utils.random(-30, 30),
+              rotationY: () => gsap.utils.random(-30, 30),
+              rotationZ: () => gsap.utils.random(-15, 15),
+              scale: () => gsap.utils.random(1.05, 1.3),
               opacity: 0,
-              ease: "power2.inOut",
+              ease: "none",
               scrollTrigger: {
                 trigger: section,
                 start: "bottom bottom",
