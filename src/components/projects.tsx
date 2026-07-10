@@ -43,8 +43,14 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
   const mouseXSpring = useSpring(x, { stiffness: 100, damping: 30 });
   const mouseYSpring = useSpring(y, { stiffness: 100, damping: 30 });
 
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"]);
+  const isEven = index % 2 === 0;
+  const defaultRotateX = 4;
+  const defaultRotateY = isEven ? 8 : -8;
+  const defaultRotateZ = isEven ? 2 : -2;
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], [`${defaultRotateX + 10}deg`, `${defaultRotateX - 10}deg`]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], [`${defaultRotateY - 10}deg`, `${defaultRotateY + 10}deg`]);
+  const rotateZ = useMotionValue(defaultRotateZ);
   
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -105,10 +111,16 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
       <motion.div 
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        style={{
+          rotateX,
+          rotateY,
+          rotateZ,
+          transformStyle: "preserve-3d",
+          transformPerspective: 1000,
+        }}
         className="w-full lg:w-1/2 aspect-[4/3] rounded-[40px] overflow-hidden shadow-[0_0_50px_rgba(139,92,246,0.1)] relative group border border-white/10 p-2 bg-white/5"
       >
-        <div style={{ transform: "translateZ(30px)" }} className="w-full h-full relative overflow-hidden rounded-[32px]">
+        <div style={{ transform: "translateZ(30px)", transformStyle: "preserve-3d" }} className="w-full h-full relative overflow-hidden rounded-[32px]">
           <div className={`project-img-${index} absolute inset-0 ${project.imageClass} transition-transform duration-700 group-hover:scale-[1.15]`} />
           <div className="absolute inset-x-8 -bottom-8 top-16 bg-[#0a0a0a]/80 backdrop-blur-md rounded-t-2xl border border-white/10 shadow-2xl overflow-hidden transition-transform duration-700 group-hover:-translate-y-4">
              <div className="w-full h-8 bg-white/5 backdrop-blur-sm border-b border-white/10 flex items-center px-4 gap-2">
