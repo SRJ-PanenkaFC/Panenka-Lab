@@ -71,7 +71,7 @@ export function ScrollEffects() {
             start: "top top",
             end: () => `+=${totalSlides * 130}%`,
             pin: true,
-            scrub: 0.3,
+            scrub: 0.8,
             invalidateOnRefresh: true,
           },
         });
