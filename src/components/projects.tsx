@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useRef } from "react";
@@ -8,6 +8,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { Magnetic } from "@/components/magnetic";
+import { TextReveal } from "@/components/text-reveal";
 
 const projects = [
   {
@@ -35,6 +36,38 @@ const projects = [
 
 function ProjectCard({ project, index }: { project: any; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
+  
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x, { stiffness: 100, damping: 30 });
+  const mouseYSpring = useSpring(y, { stiffness: 100, damping: 30 });
+
+  const isEven = index % 2 === 0;
+  const defaultRotateX = 4;
+  const defaultRotateY = isEven ? 8 : -8;
+  const defaultRotateZ = isEven ? 2 : -2;
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], [`${defaultRotateX + 10}deg`, `${defaultRotateX - 10}deg`]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], [`${defaultRotateY - 10}deg`, `${defaultRotateY + 10}deg`]);
+  const rotateZ = useMotionValue(defaultRotateZ);
+  
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const localX = e.clientX - rect.left;
+    const localY = e.clientY - rect.top;
+    
+    const normX = (localX / rect.width) - 0.5;
+    const normY = (localY / rect.height) - 0.5;
+    
+    x.set(normX);
+    y.set(normY);
+  };
+  
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
   
   useGSAP(() => {
     gsap.fromTo(".project-img-" + index,
@@ -74,11 +107,22 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
         index % 2 !== 0 ? "lg:flex-row-reverse" : ""
       }`}
     >
-      {/* Project Image Mockup with Parallax */}
-      <div className="w-full lg:w-1/2 aspect-[4/3] rounded-[40px] overflow-hidden shadow-[0_0_50px_rgba(139,92,246,0.1)] relative group border border-white/10 p-2 bg-white/5">
-        <div className="w-full h-full relative overflow-hidden rounded-[32px]">
+      {/* Project Image Mockup with Parallax and Sway */}
+      <motion.div 
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{
+          rotateX,
+          rotateY,
+          rotateZ,
+          transformStyle: "preserve-3d",
+          transformPerspective: 1000,
+        }}
+        className="w-full lg:w-1/2 aspect-[4/3] rounded-[40px] overflow-hidden shadow-[0_0_50px_rgba(139,92,246,0.1)] relative group border border-white/10 p-2 bg-white/5"
+      >
+        <div style={{ transform: "translateZ(30px)", transformStyle: "preserve-3d" }} className="w-full h-full relative overflow-hidden rounded-[32px]">
           <div className={`project-img-${index} absolute inset-0 ${project.imageClass} transition-transform duration-700 group-hover:scale-[1.15]`} />
-          <div className="absolute inset-x-8 -bottom-8 top-16 bg-[#0a0a0a]/80 backdrop-blur-md rounded-t-2xl border border-white/10 shadow-2xl overflow-hidden">
+          <div className="absolute inset-x-8 -bottom-8 top-16 bg-[#0a0a0a]/80 backdrop-blur-md rounded-t-2xl border border-white/10 shadow-2xl overflow-hidden transition-transform duration-700 group-hover:-translate-y-4">
              <div className="w-full h-8 bg-white/5 backdrop-blur-sm border-b border-white/10 flex items-center px-4 gap-2">
                <div className="w-2.5 h-2.5 rounded-full bg-white/20" />
                <div className="w-2.5 h-2.5 rounded-full bg-white/20" />
@@ -94,7 +138,7 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
              </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Project Details */}
       <div className={`project-details-${index} w-full lg:w-1/2 space-y-8`}>
@@ -129,15 +173,9 @@ export function Projects() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-24 gap-6 border-b border-white/10 pb-12">
           <div className="max-w-3xl">
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="text-4xl md:text-6xl font-bold tracking-tight text-white mb-6"
-            >
-              Future-Ready <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">Creations</span>
-            </motion.h2>
+            <div className="text-4xl md:text-6xl font-bold tracking-tight text-white mb-6">
+              <TextReveal text="Future-Ready Creations" />
+            </div>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}

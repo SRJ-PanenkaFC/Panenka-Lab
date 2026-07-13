@@ -12,7 +12,7 @@ import { ScrollEffects } from "@/components/scroll-effects";
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen w-full overflow-x-hidden">
       <ScrollEffects />
       <Navbar />
       <Hero />

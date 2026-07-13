@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
+import { motion, useMotionTemplate, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowRight, Code2, Cpu, Layers, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { MouseEvent, useRef } from "react";
@@ -12,15 +12,57 @@ import { Typewriter } from "@/components/typewriter";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// A reusable glass card component with spotlight effect
-function GlassCard({ children, className, delay = 0 }: { children: React.ReactNode, className?: string, delay?: number }) {
+interface GlassCardProps {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+  defaultRotateX?: number;
+  defaultRotateY?: number;
+  defaultRotateZ?: number;
+  defaultTranslateZ?: number;
+}
+
+// A reusable glass card component with spotlight effect and 3D tilt
+function GlassCard({
+  children,
+  className,
+  delay = 0,
+  defaultRotateX = 0,
+  defaultRotateY = 0,
+  defaultRotateZ = 0,
+  defaultTranslateZ = 0,
+}: GlassCardProps) {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x, { stiffness: 150, damping: 20 });
+  const mouseYSpring = useSpring(y, { stiffness: 150, damping: 20 });
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], [`${defaultRotateX + 15}deg`, `${defaultRotateX - 15}deg`]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], [`${defaultRotateY - 15}deg`, `${defaultRotateY + 15}deg`]);
+  const rotateZ = useMotionValue(defaultRotateZ);
+
   function handleMouseMove({ currentTarget, clientX, clientY }: MouseEvent) {
-    const { left, top } = currentTarget.getBoundingClientRect();
-    mouseX.set(clientX - left);
-    mouseY.set(clientY - top);
+    const rect = currentTarget.getBoundingClientRect();
+    const localX = clientX - rect.left;
+    const localY = clientY - rect.top;
+
+    mouseX.set(localX);
+    mouseY.set(localY);
+
+    const normX = (localX / rect.width) - 0.5;
+    const normY = (localY / rect.height) - 0.5;
+
+    x.set(normX);
+    y.set(normY);
+  }
+
+  function handleMouseLeave() {
+    x.set(0);
+    y.set(0);
   }
 
   return (
@@ -29,6 +71,15 @@ function GlassCard({ children, className, delay = 0 }: { children: React.ReactNo
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
       onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX,
+        rotateY,
+        rotateZ,
+        z: defaultTranslateZ,
+        transformStyle: "preserve-3d",
+        transformPerspective: 1000,
+      }}
       className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl ${className}`}
     >
       <motion.div
@@ -40,10 +91,11 @@ function GlassCard({ children, className, delay = 0 }: { children: React.ReactNo
               rgba(139, 92, 246, 0.15),
               transparent 80%
             )
-          `
+          `,
+          transform: "translateZ(1px)"
         }}
       />
-      <div className="relative z-10">
+      <div style={{ transform: "translateZ(30px)", transformStyle: "preserve-3d" }} className="relative z-10">
         {children}
       </div>
     </motion.div>
@@ -166,14 +218,21 @@ export function Hero() {
         </div>
 
         {/* Right Side: Floating Glass Cards */}
-        <div className="lg:col-span-5 relative h-[500px] hidden lg:block">
+        <div className="lg:col-span-5 relative h-[500px] hidden lg:block" style={{ perspective: 1200, transformStyle: "preserve-3d" }}>
           {/* Card 1 */}
           <motion.div
             animate={{ y: [-15, 15, -15] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            style={{ transformStyle: "preserve-3d" }}
             className="absolute top-0 right-4 w-64 z-20"
           >
-            <GlassCard delay={0.6}>
+            <GlassCard
+              delay={0.6}
+              defaultRotateX={10}
+              defaultRotateY={-15}
+              defaultRotateZ={-5}
+              defaultTranslateZ={10}
+            >
               <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mb-4 border border-purple-500/30">
                 <Code2 className="w-6 h-6 text-purple-400" />
               </div>
@@ -186,9 +245,17 @@ export function Hero() {
           <motion.div
             animate={{ y: [15, -15, 15] }}
             transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+            style={{ transformStyle: "preserve-3d" }}
             className="absolute top-1/2 -left-8 -translate-y-1/2 w-64 z-30"
           >
-            <GlassCard delay={0.8} className="border-blue-500/20 bg-blue-500/5">
+            <GlassCard
+              delay={0.8}
+              defaultRotateX={-5}
+              defaultRotateY={15}
+              defaultRotateZ={5}
+              defaultTranslateZ={30}
+              className="border-blue-500/20 bg-blue-500/5"
+            >
               <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-4 border border-blue-500/30">
                 <Cpu className="w-6 h-6 text-blue-400" />
               </div>
@@ -201,9 +268,16 @@ export function Hero() {
           <motion.div
             animate={{ y: [-20, 20, -20] }}
             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            style={{ transformStyle: "preserve-3d" }}
             className="absolute bottom-0 right-12 w-64 z-10"
           >
-            <GlassCard delay={1.0}>
+            <GlassCard
+              delay={1.0}
+              defaultRotateX={15}
+              defaultRotateY={-10}
+              defaultRotateZ={8}
+              defaultTranslateZ={-20}
+            >
               <div className="w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center mb-4 border border-teal-500/30">
                 <Layers className="w-6 h-6 text-teal-400" />
               </div>

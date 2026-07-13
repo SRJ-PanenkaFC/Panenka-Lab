@@ -49,6 +49,51 @@ export function ScrollEffects() {
           scrub: true,
         },
       });
+
+      // 3D Scattering Effect on Sections
+      const sections = gsap.utils.toArray("section") as HTMLElement[];
+      
+      sections.forEach((section) => {
+        if (section.id === "process") return;
+
+        // Set perspective on the section itself for 3D transforms
+        gsap.set(section, { perspective: 1200, transformStyle: "preserve-3d" });
+        
+        // Animate the direct children of the section
+        const children = section.children;
+        
+        if (children.length > 0) {
+          gsap.fromTo(children,
+            {
+              x: 0,
+              y: 0,
+              z: 0,
+              rotationX: 0,
+              rotationY: 0,
+              rotationZ: 0,
+              scale: 1,
+              opacity: 1
+            },
+            {
+              z: () => gsap.utils.random(100, 300),
+              x: () => gsap.utils.random(-100, 100),
+              y: () => gsap.utils.random(-100, 100),
+              rotationX: () => gsap.utils.random(-30, 30),
+              rotationY: () => gsap.utils.random(-30, 30),
+              rotationZ: () => gsap.utils.random(-15, 15),
+              scale: () => gsap.utils.random(1.05, 1.3),
+              opacity: 0,
+              ease: "none",
+              scrollTrigger: {
+                trigger: section,
+                start: "bottom bottom",
+                end: "bottom top",
+                scrub: true,
+              }
+            }
+          );
+        }
+      });
     });
 
     return () => ctx.revert();

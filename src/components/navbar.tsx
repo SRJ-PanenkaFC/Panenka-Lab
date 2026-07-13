@@ -16,6 +16,7 @@ const navLinks = [
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,13 +44,24 @@ export function Navbar() {
           Panenka<span className="text-purple-500">Lab.</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8 bg-white/5 border border-white/10 rounded-full px-8 py-3 backdrop-blur-md shadow-lg">
-          {navLinks.map((link) => (
+        <nav 
+          onMouseLeave={() => setHoveredIndex(null)}
+          className="hidden md:flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 backdrop-blur-md shadow-lg"
+        >
+          {navLinks.map((link, index) => (
             <Magnetic key={link.name}>
               <Link
                 href={link.href}
-                className="text-sm font-medium text-gray-300 hover:text-white transition-colors uppercase tracking-wider"
+                onMouseEnter={() => setHoveredIndex(index)}
+                className="relative text-sm font-medium text-gray-300 hover:text-white transition-colors uppercase tracking-wider px-4 py-2"
               >
+                {hoveredIndex === index && (
+                  <motion.div
+                    layoutId="nav-pill"
+                    className="absolute inset-0 bg-white/10 rounded-full -z-10"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                )}
                 <ScrambleText text={link.name} />
               </Link>
             </Magnetic>

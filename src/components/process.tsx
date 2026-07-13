@@ -64,7 +64,7 @@ export function Process() {
         </h2>
       </div>
 
-      <div className="flex h-full items-center">
+      <div className="flex h-full items-center w-full overflow-hidden">
         <div ref={scrollContainerRef} className="flex h-full items-center gap-10 md:gap-16 px-[10vw] lg:px-[15vw] w-max">
           {steps.map((step, index) => (
             <div key={index} className="process-panel w-[85vw] md:w-[600px] flex-shrink-0 relative">
