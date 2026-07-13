@@ -28,6 +28,7 @@ export function SmoothScrolling({ children }: { children: React.ReactNode }) {
     rafId = requestAnimationFrame(raf);
 
     return () => {
+      lenis.off("scroll", ScrollTrigger.update);
       lenis.destroy();
       cancelAnimationFrame(rafId);
     };

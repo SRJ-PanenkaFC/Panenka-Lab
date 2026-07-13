@@ -62,7 +62,7 @@ function LabConsole() {
   }, "");
 
   return (
-    <div className="w-full bg-[#05050f]/80 backdrop-blur-2xl border border-white/10 rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(124,58,237,0.15)] flex flex-col h-[400px] font-mono text-[10px] md:text-xs glow-border">
+    <div className="w-full bg-[#05050f]/80 backdrop-blur-2xl border border-white/10 rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(124,58,237,0.15)] flex flex-col h-[320px] font-mono text-[10px] md:text-xs glow-border">
       {/* Console Header */}
       <div className="bg-white/5 border-b border-white/10 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-1.5">
@@ -149,16 +149,15 @@ export function Hero() {
     return () => clearInterval(interval);
   }, []);
 
-  function handleSectionMouseMove({ currentTarget, clientX, clientY }: MouseEvent) {
-    const { left, top } = currentTarget.getBoundingClientRect();
-    sectionMouseX.set(clientX - left);
-    sectionMouseY.set(clientY - top);
+  function handleSectionMouseMove({ clientX, clientY }: MouseEvent) {
+    sectionMouseX.set(clientX);
+    sectionMouseY.set(clientY);
   }
 
   return (
     <section 
       onMouseMove={handleSectionMouseMove}
-      className="relative min-h-screen flex items-center justify-center pt-24 pb-16 overflow-hidden bg-[#020205]"
+      className="relative min-h-screen flex items-center justify-center pt-20 pb-12 overflow-hidden bg-[#020205]"
     >
       {/* Global Interactive Spotlight */}
       <motion.div
@@ -175,8 +174,8 @@ export function Hero() {
       />
 
       {/* Ambient background meshes */}
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-purple-600/5 rounded-full blur-[120px] mix-blend-screen pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-blue-600/5 rounded-full blur-[120px] mix-blend-screen pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[radial-gradient(circle_at_center,rgba(124,58,237,0.06)_0%,transparent_70%)] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.05)_0%,transparent_70%)] pointer-events-none" />
 
       {/* SVG grid behind */}
       <div 
@@ -197,24 +196,24 @@ export function Hero() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-white/80 text-xs font-semibold uppercase tracking-widest mb-8"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-white/80 text-xs font-semibold uppercase tracking-widest mb-4"
           >
             <Sparkles className="w-4 h-4 text-purple-400" />
             Next-Gen Software Lab
           </motion.div>
           
-          <div className="mb-6 w-full">
+          <div className="mb-4 w-full">
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-extrabold tracking-tighter text-white leading-[1.0] font-display"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.2rem] font-extrabold tracking-tighter text-white leading-[1.0] font-display"
             >
               NEXT-LEVEL
               <br />
               <span className="text-stroke">EXPERIENCES</span>
               <br />
-              <span className="relative inline-flex items-center overflow-hidden h-[1.1em] align-bottom w-full mt-1">
+              <span className="relative inline-flex items-center overflow-hidden h-[1.1em] align-bottom mt-1 min-w-[240px] sm:min-w-[320px] lg:min-w-[380px]">
                 <span className="text-stroke select-none mr-2 font-normal">[</span>
                 <AnimatePresence mode="wait">
                   <motion.span
@@ -237,7 +236,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="text-base md:text-lg text-white/70 max-w-2xl leading-relaxed mb-10 font-light"
+            className="text-sm md:text-base text-white/70 max-w-2xl leading-relaxed mb-6 font-light"
           >
             We serve next-level experiences in software development. We design and build premium digital products that connect with your customers, streamline your business services, and drive measurable outcomes.
           </motion.p>

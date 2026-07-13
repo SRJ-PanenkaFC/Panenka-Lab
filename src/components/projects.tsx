@@ -3,6 +3,7 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowRight, Activity, Globe } from "lucide-react";
 import Link from "next/link";
+import { useRef } from "react";
 
 import { Magnetic } from "@/components/magnetic";
 import { TextReveal } from "@/components/text-reveal";
@@ -65,6 +66,7 @@ interface Project {
 }
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
+  const rectRef = useRef<DOMRect | null>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
@@ -80,7 +82,10 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   const rotateZ = useMotionValue(defaultRotateZ);
   
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+    if (!rectRef.current) {
+      rectRef.current = e.currentTarget.getBoundingClientRect();
+    }
+    const rect = rectRef.current;
     const localX = e.clientX - rect.left;
     const localY = e.clientY - rect.top;
     
@@ -94,6 +99,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   const handleMouseLeave = () => {
     x.set(0);
     y.set(0);
+    rectRef.current = null;
   };
 
   return (

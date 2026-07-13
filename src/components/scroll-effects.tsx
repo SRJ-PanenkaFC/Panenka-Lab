@@ -9,7 +9,7 @@ export function ScrollEffects() {
 
   useEffect(() => {
     setMounted(true);
-    
+
     // Setup GSAP animations after mount
     const ctx = gsap.context(() => {
       // Global Progress Bar
@@ -53,7 +53,7 @@ export function ScrollEffects() {
       // 3D Z-Scrolling slides choreography
       const slides = gsap.utils.toArray(".z-slide") as HTMLElement[];
       const totalSlides = slides.length;
-      
+
       if (totalSlides > 0) {
         // Initialize initial Z positions for slides using autoAlpha (combines opacity & visibility)
         slides.forEach((slide, index) => {
@@ -73,7 +73,7 @@ export function ScrollEffects() {
             pin: true,
             scrub: 0.3,
             invalidateOnRefresh: true,
-          }
+          },
         });
 
         // Sequence slides and their internal scrolls
@@ -81,7 +81,9 @@ export function ScrollEffects() {
           const slide = slides[i];
 
           // A. Process horizontal scroll inside slide (Special Case)
-          const processContainer = slide.querySelector(".process-scroll-container") as HTMLElement;
+          const processContainer = slide.querySelector(
+            ".process-scroll-container",
+          ) as HTMLElement;
           if (processContainer) {
             const scrollWidth = processContainer.scrollWidth;
             const scrollAmount = -(scrollWidth - window.innerWidth + 100);
@@ -98,7 +100,8 @@ export function ScrollEffects() {
             let totalContentHeight = 0;
             const children = Array.from(slide.children) as HTMLElement[];
             children.forEach((child) => {
-              totalContentHeight += Math.max(child.scrollHeight, child.offsetHeight) || 0;
+              totalContentHeight +=
+                Math.max(child.scrollHeight, child.offsetHeight) || 0;
             });
 
             const scrollAmount = totalContentHeight - window.innerHeight;
@@ -112,7 +115,8 @@ export function ScrollEffects() {
               });
             } else {
               // Center children vertically on screen if content height is less than viewport height
-              const centeringOffset = (window.innerHeight - totalContentHeight) / 2;
+              const centeringOffset =
+                (window.innerHeight - totalContentHeight) / 2;
               gsap.set(children, { y: centeringOffset });
             }
           }
@@ -121,23 +125,31 @@ export function ScrollEffects() {
           if (i < totalSlides - 1) {
             const nextSlide = slides[i + 1];
 
-            tl.to(slide, {
-              z: 1000,
-              scale: 2,
-              autoAlpha: 0,
-              duration: 1.5,
-              ease: "none",
-              force3D: true,
-            }, `transition-${i}`);
+            tl.to(
+              slide,
+              {
+                z: 600,
+                scale: 2,
+                autoAlpha: 0,
+                duration: 1.5,
+                ease: "none",
+                force3D: true,
+              },
+              `transition-${i}`,
+            );
 
-            tl.to(nextSlide, {
-              z: 0,
-              scale: 1,
-              autoAlpha: 1,
-              duration: 1.5,
-              ease: "none",
-              force3D: true,
-            }, `transition-${i}`);
+            tl.to(
+              nextSlide,
+              {
+                z: 0,
+                scale: 1,
+                autoAlpha: 1,
+                duration: 1.5,
+                ease: "none",
+                force3D: true,
+              },
+              `transition-${i}`,
+            );
           }
         }
       }
@@ -160,14 +172,20 @@ export function ScrollEffects() {
 
       {/* Floating Interactive Shape 2 (Mid Left) */}
       <div className="scroll-shape-2 fixed top-[50%] left-[5%] w-24 h-24 pointer-events-none z-[-1] opacity-20">
-        <svg viewBox="0 0 100 100" className="w-full h-full fill-none stroke-blue-500 stroke-[2]">
+        <svg
+          viewBox="0 0 100 100"
+          className="w-full h-full fill-none stroke-blue-500 stroke-[2]"
+        >
           <path d="M50 0 L100 50 L50 100 L0 50 Z" />
         </svg>
       </div>
 
       {/* Floating Interactive Shape 3 (Bottom Right) */}
       <div className="scroll-shape-1 fixed bottom-[10%] right-[10%] w-40 h-40 pointer-events-none z-[-1] opacity-10">
-        <svg viewBox="0 0 100 100" className="w-full h-full fill-none stroke-purple-500 stroke-[1]">
+        <svg
+          viewBox="0 0 100 100"
+          className="w-full h-full fill-none stroke-purple-500 stroke-[1]"
+        >
           <circle cx="50" cy="50" r="40" strokeDasharray="10 10" />
           <circle cx="50" cy="50" r="20" />
         </svg>

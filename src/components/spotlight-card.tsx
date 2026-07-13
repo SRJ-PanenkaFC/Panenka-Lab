@@ -5,6 +5,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
 export function SpotlightCard({ children, className = "" }: { children: React.ReactNode, className?: string }) {
   const divRef = useRef<HTMLDivElement>(null);
+  const rectRef = useRef<DOMRect | null>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [opacity, setOpacity] = useState(0);
@@ -21,8 +22,10 @@ export function SpotlightCard({ children, className = "" }: { children: React.Re
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!divRef.current || isFocused) return;
 
-    const div = divRef.current;
-    const rect = div.getBoundingClientRect();
+    if (!rectRef.current) {
+      rectRef.current = divRef.current.getBoundingClientRect();
+    }
+    const rect = rectRef.current;
 
     const localX = e.clientX - rect.left;
     const localY = e.clientY - rect.top;
@@ -54,6 +57,7 @@ export function SpotlightCard({ children, className = "" }: { children: React.Re
     setOpacity(0);
     x.set(0);
     y.set(0);
+    rectRef.current = null;
   };
 
   return (

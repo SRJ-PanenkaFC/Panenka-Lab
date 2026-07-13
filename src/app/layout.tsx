@@ -33,7 +33,7 @@ export default function RootLayout({
       className={`${syne.variable} ${plusJakartaSans.variable} h-full antialiased overflow-x-hidden w-full scroll-smooth`}
     >
       <body className="min-h-full flex flex-col bg-[#030307] text-white overflow-x-hidden w-full font-sans antialiased">
-        <Particles />
+        {/* <Particles /> */}
         <div className="fixed inset-0 bg-noise pointer-events-none z-[100]" />
         <SmoothScrolling>{children}</SmoothScrolling>
       </body>
