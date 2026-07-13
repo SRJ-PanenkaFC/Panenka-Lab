@@ -104,8 +104,8 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
   return (
     <div
-      style={{ top: `${110 + index * 35}px` }}
-      className="sticky w-full bg-[#05050e]/95 backdrop-blur-3xl border border-white/5 rounded-[40px] p-8 md:p-12 lg:p-16 shadow-[0_-15px_40px_rgba(0,0,0,0.6)] flex flex-col lg:flex-row gap-12 lg:gap-20 items-center mb-16 glow-border"
+      style={{ top: `${80 + index * 20}px` }}
+      className="sticky w-full bg-[#05050e]/95 backdrop-blur-3xl border border-white/5 rounded-[28px] md:rounded-[40px] p-6 md:p-10 lg:p-14 shadow-[0_-15px_40px_rgba(0,0,0,0.6)] flex flex-col lg:flex-row gap-8 lg:gap-20 items-center mb-10 md:mb-16 glow-border"
     >
       {/* Background outlined index number */}
       <div className="absolute right-12 bottom-4 select-none pointer-events-none text-[8rem] md:text-[12rem] font-black text-stroke opacity-[0.03] font-display">
@@ -222,7 +222,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
 export function Projects() {
   return (
-    <section id="work" className="py-32 bg-[#020205] relative z-20">
+    <section id="work" className="py-16 md:py-32 bg-[#020205] relative z-20">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-24 gap-6 border-b border-white/5 pb-12">
           <div className="max-w-3xl">

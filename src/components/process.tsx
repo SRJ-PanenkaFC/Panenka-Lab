@@ -71,21 +71,21 @@ const steps = [
 
 export function Process() {
   return (
-    <section id="process" className="py-24 bg-[#020205] overflow-hidden h-screen flex flex-col justify-center relative">
+    <section id="process" className="py-12 md:py-24 bg-[#020205] overflow-hidden h-dvh flex flex-col justify-center relative">
       {/* Glowing Horizontal Pipeline Line */}
       <div className="absolute top-1/2 left-0 w-full h-[2px] bg-white/5 -translate-y-1/2 z-0" />
       <div className="absolute top-1/2 left-0 w-full h-[2px] bg-gradient-to-r from-purple-500 via-blue-500 to-teal-400 -translate-y-1/2 z-0 origin-left scale-x-0 pipeline-progress shadow-[0_0_10px_rgba(124,58,237,0.5)]" />
       
-      <div className="absolute top-20 left-10 md:left-24 z-10">
-        <h2 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-4 font-display uppercase">
+      <div className="absolute top-16 left-5 md:left-24 z-10 right-5 md:right-auto">
+        <h2 className="text-2xl sm:text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-4 font-display uppercase">
           HOW WE <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">OPERATE</span>
         </h2>
       </div>
 
-      <div className="flex h-full items-center w-full overflow-hidden">
-        <div className="process-scroll-container flex h-full items-center gap-10 md:gap-16 px-[10vw] lg:px-[15vw] w-max">
+      <div className="flex h-full items-center w-full overflow-hidden pt-20 md:pt-0">
+        <div className="process-scroll-container flex h-full items-center gap-8 md:gap-16 px-[5vw] lg:px-[15vw] w-max">
           {steps.map((step, index) => (
-            <div key={index} className="process-panel w-[85vw] md:w-[500px] flex-shrink-0 relative z-10">
+            <div key={index} className="process-panel w-[80vw] sm:w-[85vw] md:w-[500px] flex-shrink-0 relative z-10">
               <div className="w-full bg-[#050510]/80 backdrop-blur-2xl border border-white/5 p-8 md:p-12 rounded-[40px] relative overflow-hidden group hover:bg-[#080816]/95 transition-colors duration-500 glow-border">
                 
                 <div className="absolute -top-20 -right-20 w-64 h-64 bg-purple-500/5 rounded-full blur-[80px] group-hover:bg-blue-500/10 transition-colors duration-700" />

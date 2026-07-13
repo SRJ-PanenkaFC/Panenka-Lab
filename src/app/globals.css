@@ -28,6 +28,7 @@
     scroll-behavior: smooth;
     overflow-x: hidden;
     width: 100%;
+    overscroll-behavior-y: none;
   }
   
   body {
@@ -36,6 +37,7 @@
     antialiased: true;
     overflow-x: hidden;
     width: 100%;
+    overscroll-behavior-y: none;
   }
 }
 
@@ -67,18 +69,19 @@
 .z-scroll-container {
   position: relative;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   perspective: 1000px;
   transform-style: preserve-3d;
   background-color: #020205;
+  touch-action: pan-y;
 }
 
 .z-slide {
   position: absolute;
   inset: 0;
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   transform-style: preserve-3d;
   background-color: #020205;

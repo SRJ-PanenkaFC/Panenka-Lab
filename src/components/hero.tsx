@@ -157,7 +157,7 @@ export function Hero() {
   return (
     <section 
       onMouseMove={handleSectionMouseMove}
-      className="relative min-h-screen flex items-center justify-center pt-20 pb-12 overflow-hidden bg-[#020205]"
+      className="relative min-h-dvh flex items-center justify-center pt-24 pb-16 overflow-hidden bg-[#020205]"
     >
       {/* Global Interactive Spotlight */}
       <motion.div
@@ -188,10 +188,10 @@ export function Hero() {
         }}
       />
 
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center z-10 hero-content w-full relative">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center z-10 hero-content w-full relative">
         
         {/* Left Side: Typography & CTA */}
-        <div className="lg:col-span-7 flex flex-col items-start text-left">
+        <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -207,13 +207,13 @@ export function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.2rem] font-extrabold tracking-tighter text-white leading-[1.0] font-display"
+              className="text-[2.4rem] sm:text-5xl md:text-6xl lg:text-[4.2rem] font-extrabold tracking-tighter text-white leading-[1.0] font-display"
             >
               NEXT-LEVEL
               <br />
               <span className="text-stroke">EXPERIENCES</span>
               <br />
-              <span className="relative inline-flex items-center overflow-hidden h-[1.1em] align-bottom mt-1 min-w-[240px] sm:min-w-[320px] lg:min-w-[380px]">
+              <span className="relative inline-flex items-center overflow-hidden h-[1.1em] align-bottom mt-1 min-w-[200px] sm:min-w-[320px] lg:min-w-[380px]">
                 <span className="text-stroke select-none mr-2 font-normal">[</span>
                 <AnimatePresence mode="wait">
                   <motion.span
@@ -245,7 +245,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto"
+            className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 w-full"
           >
             <Magnetic>
               <Link
@@ -270,7 +270,7 @@ export function Hero() {
         </div>
 
         {/* Right Side: Lab Console Display */}
-        <div className="lg:col-span-5 relative w-full" style={{ perspective: 1200 }}>
+        <div className="lg:col-span-5 relative w-full hidden lg:block" style={{ perspective: 1200 }}>
           <motion.div
             initial={{ opacity: 0, scale: 0.9, rotateY: 5 }}
             animate={{ opacity: 1, scale: 1, rotateY: 0 }}

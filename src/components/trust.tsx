@@ -81,10 +81,10 @@ function LogoMarquee() {
 
 export function Trust() {
   return (
-    <section className="py-24 border-y border-white/5 bg-[#020205] relative overflow-hidden">
+    <section className="py-12 md:py-24 border-y border-white/5 bg-[#020205] relative overflow-hidden">
       {/* Grid Pattern Background */}
       <div 
-        className="absolute inset-[-20%] z-0 opacity-15 pointer-events-none mix-blend-screen"
+        className="absolute inset-[-20%] z-0 opacity-15 pointer-events-none"
         style={{
           backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
           linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px)`,

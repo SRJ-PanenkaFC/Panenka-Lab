@@ -165,7 +165,7 @@ const services = [
 
 export function Services() {
   return (
-    <section id="services" className="py-32 bg-[#020205] relative overflow-hidden">
+    <section id="services" className="py-16 md:py-32 bg-[#020205] relative overflow-hidden">
       {/* Parallax Background Elements */}
       <div className="service-bg-1 absolute top-10 left-10 w-[400px] h-[400px] bg-[radial-gradient(circle_at_center,rgba(124,58,237,0.06)_0%,transparent_70%)] -z-10 pointer-events-none" />
       <div className="service-bg-2 absolute bottom-10 right-10 w-[500px] h-[500px] bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.05)_0%,transparent_70%)] -z-10 pointer-events-none" />

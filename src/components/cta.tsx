@@ -8,7 +8,7 @@ import Image from "next/image";
 
 export function CTA() {
   return (
-    <section id="contact" className="py-44 relative overflow-hidden bg-[#020205]">
+    <section id="contact" className="py-20 md:py-32 relative overflow-hidden bg-[#020205]">
       {/* High-Performance Image Parallax Background */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <Image
@@ -44,7 +44,7 @@ export function CTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-white mb-8 font-display uppercase leading-[0.95]"
+            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-white mb-8 font-display uppercase leading-[0.95]"
           >
             BUILD THE
             <br />

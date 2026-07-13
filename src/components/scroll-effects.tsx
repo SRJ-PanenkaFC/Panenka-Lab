@@ -71,8 +71,21 @@ export function ScrollEffects() {
             start: "top top",
             end: () => `+=${totalSlides * 130}%`,
             pin: true,
-            scrub: 0.8,
+            scrub: 1.2,
             invalidateOnRefresh: true,
+            anticipatePin: 1,
+            preventOverlaps: true,
+            fastScrollEnd: true,
+            // Force hero back to fully visible when scrolling back to top
+            onLeaveBack: () => {
+              gsap.set(slides[0], { z: 0, scale: 1, autoAlpha: 1, clearProps: "transform,opacity,visibility" });
+            },
+            // Clamp hero opacity during slow scrub near the top boundary
+            onUpdate: (self) => {
+              if (self.progress < 0.02) {
+                gsap.set(slides[0], { autoAlpha: 1 });
+              }
+            },
           },
         });
 
@@ -128,8 +141,8 @@ export function ScrollEffects() {
             tl.to(
               slide,
               {
-                z: 600,
-                scale: 2,
+                z: 350,
+                scale: 1.3,
                 autoAlpha: 0,
                 duration: 1.5,
                 ease: "none",
