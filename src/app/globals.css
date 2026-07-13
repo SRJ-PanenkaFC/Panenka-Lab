@@ -1,14 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #050505;
+  --font-sans: var(--font-sans), system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-display), sans-serif;
+
+  --color-background: #020205;
   --color-foreground: #ffffff;
   
-  --color-primary: #8b5cf6;
+  --color-primary: #7c3aed;
   --color-primary-foreground: #ffffff;
   
-  --color-muted: #111111;
-  --color-muted-foreground: #888888;
+  --color-accent: #00f5ff;
+  --color-muted: #0a0a14;
+  --color-muted-foreground: #94a3b8;
 }
 
 @layer base {
@@ -17,7 +21,7 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
+    border-color: rgba(255, 255, 255, 0.08);
   }
   
   html {
@@ -35,8 +39,57 @@
   }
 }
 
-.text-gradient {
-  background-clip: text;
-  -webkit-background-clip: text;
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+.text-stroke {
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
   -webkit-text-fill-color: transparent;
 }
+
+.glow-border {
+  position: relative;
+}
+.glow-border::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(to right, rgba(124, 58, 237, 0.2), rgba(0, 245, 255, 0.2));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.z-scroll-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  background-color: #020205;
+}
+
+.z-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  background-color: #020205;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.z-scroll-container .sticky {
+  position: relative !important;
+  top: auto !important;
+}
+
+
+

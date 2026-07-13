@@ -1,85 +1,118 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useRef } from "react";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
-import ScrollTrigger from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
+import { motion, useInView } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
 
 const stats = [
   { value: "150+", label: "Products Launched" },
   { value: "40+", label: "Enterprise Clients" },
-  { value: "$2B+", label: "Client Revenue Generated" },
-  { value: "10+", label: "Years of Excellence" },
+  { value: "$2B+", label: "Capital Flow Handled" },
+  { value: "10+", label: "Years of Engineering" },
 ];
 
-export function Trust() {
-  const containerRef = useRef<HTMLElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
+const partnerLogos = ["OpenAI", "Vercel", "Stripe", "Anthropic", "Apple", "Github", "AWS", "Google"];
 
-  useGSAP(() => {
-    gsap.to(gridRef.current, {
-      y: "15%",
-      ease: "none",
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: true,
-      },
-    });
+function Counter({ value }: { value: string }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const [count, setCount] = useState(0);
+  
+  // Extract number and suffix/prefix
+  const match = value.match(/(\$?)([0-9]+)(\+?)/);
+  const prefix = match ? match[1] : "";
+  const target = match ? parseInt(match[2], 10) : 0;
+  const suffix = match ? match[3] : "";
 
-    gsap.fromTo(".stat-item",
-      { y: 80, opacity: 0, scale: 0.8 },
-      {
-        y: 0,
-        opacity: 1,
-        scale: 1,
-        stagger: 0.1,
-        ease: "none",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 85%",
-          end: "center center",
-          scrub: 1,
-        }
+  useEffect(() => {
+    if (!isInView) return;
+    
+    let start = 0;
+    const duration = 2000; // 2 seconds
+    const steps = 60;
+    const stepTime = duration / steps;
+    const increment = target / steps;
+
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= target) {
+        setCount(target);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(start));
       }
-    );
-  }, { scope: containerRef });
+    }, stepTime);
+
+    return () => clearInterval(timer);
+  }, [isInView, target]);
 
   return (
-    <section ref={containerRef} className="py-32 border-y border-white/10 bg-[#050505] relative overflow-hidden">
-      {/* CSS Grid Pattern Parallax Background */}
+    <span ref={ref}>
+      {prefix}
+      {count}
+      {suffix}
+    </span>
+  );
+}
+
+function LogoMarquee() {
+  return (
+    <div className="w-full overflow-hidden border-t border-white/5 py-12 relative z-10 select-none bg-black/20">
+      <div className="flex w-max">
+        <motion.div
+          animate={{ x: [0, "-50%"] }}
+          transition={{
+            ease: "linear",
+            duration: 30,
+            repeat: Infinity,
+          }}
+          className="flex gap-20 pr-20 whitespace-nowrap"
+        >
+          {/* Repeat logos to cover the full marquee sliding width */}
+          {[...partnerLogos, ...partnerLogos, ...partnerLogos, ...partnerLogos].map((logo, i) => (
+            <span key={i} className="text-xs font-display font-bold tracking-[0.25em] text-white/20 uppercase hover:text-purple-400 transition-colors duration-300">
+              {logo}
+            </span>
+          ))}
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+export function Trust() {
+  return (
+    <section className="py-24 border-y border-white/5 bg-[#020205] relative overflow-hidden">
+      {/* Grid Pattern Background */}
       <div 
-        ref={gridRef}
-        className="absolute inset-[-20%] z-0 opacity-20 pointer-events-none mix-blend-screen"
+        className="absolute inset-[-20%] z-0 opacity-15 pointer-events-none mix-blend-screen"
         style={{
-          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px)`,
-          backgroundSize: "60px 60px",
+          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px)`,
+          backgroundSize: "80px 80px",
         }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#050505] via-transparent to-[#050505] z-0 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#020205] via-transparent to-[#020205] z-0 pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 divide-x divide-white/10">
+      <div className="max-w-7xl mx-auto px-6 relative z-10 mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-0 md:divide-x md:divide-white/10">
           {stats.map((stat, index) => (
             <div
               key={index}
-              className="stat-item flex flex-col items-center justify-center text-center px-4"
+              className="flex flex-col items-center justify-center text-center px-6 py-4"
             >
-              <div className="text-4xl md:text-6xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 mb-2">
-                {stat.value}
+              <div className="text-5xl md:text-6xl font-extrabold tracking-tighter text-white mb-3 font-display">
+                <Counter value={stat.value} />
               </div>
-              <div className="text-xs md:text-sm font-semibold text-purple-400 uppercase tracking-widest">
+              <div className="text-[10px] font-bold text-purple-400 uppercase tracking-[0.2em] font-sans">
                 {stat.label}
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Partner Logos Marquee */}
+      <LogoMarquee />
     </section>
   );
 }

@@ -50,50 +50,97 @@ export function ScrollEffects() {
         },
       });
 
-      // 3D Scattering Effect on Sections
-      const sections = gsap.utils.toArray("section") as HTMLElement[];
+      // 3D Z-Scrolling slides choreography
+      const slides = gsap.utils.toArray(".z-slide") as HTMLElement[];
+      const totalSlides = slides.length;
       
-      sections.forEach((section) => {
-        if (section.id === "process") return;
+      if (totalSlides > 0) {
+        // Initialize initial Z positions for slides using autoAlpha (combines opacity & visibility)
+        slides.forEach((slide, index) => {
+          if (index > 0) {
+            gsap.set(slide, { z: -1200, scale: 0.5, autoAlpha: 0 });
+          } else {
+            gsap.set(slide, { z: 0, scale: 1, autoAlpha: 1 });
+          }
+        });
 
-        // Set perspective on the section itself for 3D transforms
-        gsap.set(section, { perspective: 1200, transformStyle: "preserve-3d" });
-        
-        // Animate the direct children of the section
-        const children = section.children;
-        
-        if (children.length > 0) {
-          gsap.fromTo(children,
-            {
-              x: 0,
-              y: 0,
-              z: 0,
-              rotationX: 0,
-              rotationY: 0,
-              rotationZ: 0,
-              scale: 1,
-              opacity: 1
-            },
-            {
-              z: () => gsap.utils.random(100, 300),
-              x: () => gsap.utils.random(-100, 100),
-              y: () => gsap.utils.random(-100, 100),
-              rotationX: () => gsap.utils.random(-30, 30),
-              rotationY: () => gsap.utils.random(-30, 30),
-              rotationZ: () => gsap.utils.random(-15, 15),
-              scale: () => gsap.utils.random(1.05, 1.3),
-              opacity: 0,
-              ease: "none",
-              scrollTrigger: {
-                trigger: section,
-                start: "bottom bottom",
-                end: "bottom top",
-                scrub: true,
-              }
+        // Master Z-Scroll Timeline
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".z-scroll-container",
+            start: "top top",
+            end: () => `+=${totalSlides * 130}%`,
+            pin: true,
+            scrub: 0.3,
+            invalidateOnRefresh: true,
+          }
+        });
+
+        // Sequence slides and their internal scrolls
+        for (let i = 0; i < totalSlides; i++) {
+          const slide = slides[i];
+
+          // A. Process horizontal scroll inside slide (Special Case)
+          const processContainer = slide.querySelector(".process-scroll-container") as HTMLElement;
+          if (processContainer) {
+            const scrollWidth = processContainer.scrollWidth;
+            const scrollAmount = -(scrollWidth - window.innerWidth + 100);
+            if (scrollAmount < 0) {
+              tl.to(processContainer, {
+                x: scrollAmount,
+                duration: 2.5,
+                ease: "none",
+                force3D: true,
+              });
             }
-          );
+          } else {
+            // B. Generic vertical scroll for tall slides (General Case)
+            let totalContentHeight = 0;
+            const children = Array.from(slide.children) as HTMLElement[];
+            children.forEach((child) => {
+              totalContentHeight += Math.max(child.scrollHeight, child.offsetHeight) || 0;
+            });
+
+            const scrollAmount = totalContentHeight - window.innerHeight;
+            if (scrollAmount > 0) {
+              // Scroll all children vertically
+              tl.to(children, {
+                y: -scrollAmount - 60, // Scroll past with safety padding
+                duration: 2.5,
+                ease: "none",
+                force3D: true,
+              });
+            } else {
+              // Center children vertically on screen if content height is less than viewport height
+              const centeringOffset = (window.innerHeight - totalContentHeight) / 2;
+              gsap.set(children, { y: centeringOffset });
+            }
+          }
+
+          // C. Slide transitions using autoAlpha and hardware acceleration (force3D)
+          if (i < totalSlides - 1) {
+            const nextSlide = slides[i + 1];
+
+            tl.to(slide, {
+              z: 1000,
+              scale: 2,
+              autoAlpha: 0,
+              duration: 1.5,
+              ease: "none",
+              force3D: true,
+            }, `transition-${i}`);
+
+            tl.to(nextSlide, {
+              z: 0,
+              scale: 1,
+              autoAlpha: 1,
+              duration: 1.5,
+              ease: "none",
+              force3D: true,
+            }, `transition-${i}`);
+          }
         }
-      });
+      }
     });
 
     return () => ctx.revert();

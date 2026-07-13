@@ -1,6 +1,5 @@
 import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
-import { Marquee } from "@/components/marquee";
 import { Services } from "@/components/services";
 import { Projects } from "@/components/projects";
 import { Process } from "@/components/process";
@@ -12,18 +11,36 @@ import { ScrollEffects } from "@/components/scroll-effects";
 
 export default function Home() {
   return (
-    <main className="min-h-screen w-full overflow-x-hidden">
+    <main className="relative bg-[#020205] text-white">
       <ScrollEffects />
       <Navbar />
-      <Hero />
-      <Marquee text="Design • Engineering • AI Strategy • Web3 • Mobile" speed={30} />
-      <Services />
-      <Projects />
-      <Process />
-      <Trust />
-      <Products />
-      <CTA />
-      <Footer />
+      
+      {/* 3D Z-Scroll Viewport */}
+      <div className="z-scroll-container">
+        <div className="z-slide">
+          <Hero />
+        </div>
+        <div className="z-slide">
+          <Services />
+        </div>
+        <div className="z-slide">
+          <Projects />
+        </div>
+        <div className="z-slide">
+          <Process />
+        </div>
+        <div className="z-slide">
+          <Trust />
+        </div>
+        <div className="z-slide">
+          <Products />
+        </div>
+        <div className="z-slide">
+          <CTA />
+          <Footer />
+        </div>
+      </div>
     </main>
   );
 }
+

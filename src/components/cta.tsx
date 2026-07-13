@@ -4,73 +4,52 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Magnetic } from "@/components/magnetic";
-import { ScrambleText } from "@/components/scramble-text";
-import { useRef } from "react";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
-import ScrollTrigger from "gsap/ScrollTrigger";
 import Image from "next/image";
 
-gsap.registerPlugin(ScrollTrigger);
-
 export function CTA() {
-  const containerRef = useRef<HTMLElement>(null);
-  const bgRef = useRef<HTMLImageElement>(null);
-
-  useGSAP(() => {
-    // True parallax: move the background image at a different speed than the section scrolls
-    gsap.to(bgRef.current, {
-      y: "40%", // Background moves down slowly
-      ease: "none",
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: true,
-      },
-    });
-
-    // Text parallax: text moves up faster than the section
-    gsap.to(".cta-text", {
-      y: -150,
-      ease: "none",
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: true,
-      },
-    });
-  }, { scope: containerRef });
-
   return (
-    <section id="contact" ref={containerRef} className="py-40 relative overflow-hidden bg-[#050505]">
+    <section id="contact" className="py-44 relative overflow-hidden bg-[#020205]">
       {/* High-Performance Image Parallax Background */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <Image
-          ref={bgRef}
           src="/bg-parallax.png"
           alt="Abstract Background"
           fill
-          className="object-cover opacity-30 scale-125 origin-top"
-          // scale-125 ensures we have extra image height/width to move around without exposing the edges
+          className="object-cover opacity-15 scale-125 origin-top pointer-events-none"
         />
         {/* Overlay gradient to blend it into the dark theme */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-[#050505]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#020205] via-transparent to-[#020205]" />
+      </div>
+
+      {/* Scrolling Text Ticker behind content */}
+      <div className="absolute inset-x-0 top-1/3 overflow-hidden pointer-events-none select-none z-0">
+        <motion.div
+          animate={{ x: [0, "-50%"] }}
+          transition={{
+            ease: "linear",
+            duration: 25,
+            repeat: Infinity,
+          }}
+          className="flex whitespace-nowrap text-[8vw] md:text-[10vw] font-black text-stroke opacity-[0.03] leading-none uppercase font-display"
+        >
+          <span>ELEVATE YOUR EXPERIENCE • DESIGN FOR OUTCOMES • EXPERIENCES THAT GROW •&nbsp;</span>
+          <span>ELEVATE YOUR EXPERIENCE • DESIGN FOR OUTCOMES • EXPERIENCES THAT GROW •&nbsp;</span>
+        </motion.div>
       </div>
 
       <div className="relative w-full h-full z-10">
-        <div className="max-w-4xl mx-auto px-6 relative z-10 text-center cta-text">
+        <div className="max-w-4xl mx-auto px-6 relative z-10 text-center flex flex-col items-center">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-5xl md:text-7xl font-black tracking-tight text-white mb-6"
+            className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-white mb-8 font-display uppercase leading-[0.95]"
           >
-            Ready to build something <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
-              extraordinary?
+            BUILD THE
+            <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-blue-400 to-teal-400">
+              NEXT LEVEL
             </span>
           </motion.h2>
           
@@ -79,9 +58,9 @@ export function CTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto font-light leading-relaxed"
+            className="text-base md:text-lg text-gray-400 mb-12 max-w-xl mx-auto font-light leading-relaxed"
           >
-            Let's discuss how we can help you achieve your business goals through world-class software engineering and design.
+            Let's discuss how we can engineer your next-level software experience. From system optimization to custom design systems, we build what's next.
           </motion.p>
           
           <motion.div
@@ -92,14 +71,16 @@ export function CTA() {
           >
             <Magnetic>
               <Link
-                href="mailto:hello@studio.com"
-                className="group relative inline-flex items-center justify-center gap-2 px-10 py-5 text-lg font-medium text-black bg-white rounded-full overflow-hidden"
+                href="mailto:hello@panenkalab.com"
+                className="group relative inline-flex items-center justify-center w-48 h-48 md:w-52 md:h-52 rounded-full border border-white/10 bg-white/5 backdrop-blur-md overflow-hidden text-white font-bold transition-all duration-500 hover:scale-105 hover:border-purple-500/50 hover:shadow-[0_0_50px_rgba(124,58,237,0.25)]"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-blue-400 translate-y-[100%] group-hover:translate-y-[0%] transition-transform duration-500 ease-[0.16,1,0.3,1]" />
-                <span className="relative z-10 group-hover:text-white transition-colors duration-500">
-                  <ScrambleText text="Start a Conversation" />
-                </span>
-                <ArrowRight className="w-5 h-5 relative z-10 group-hover:text-white group-hover:translate-x-1 transition-all duration-500" />
+                {/* Expanding hover fill */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-purple-600 to-blue-500 translate-y-[100%] group-hover:translate-y-[0%] transition-transform duration-500 ease-[0.16,1,0.3,1] z-0" />
+                <div className="relative z-10 flex flex-col items-center gap-1">
+                  <span className="text-[9px] tracking-widest text-purple-400 group-hover:text-white/60 font-bold uppercase transition-colors duration-500">Ready?</span>
+                  <span className="text-sm font-display tracking-widest uppercase">Let's Talk</span>
+                  <ArrowRight className="w-4 h-4 mt-2 group-hover:translate-x-1 transition-transform duration-300" />
+                </div>
               </Link>
             </Magnetic>
           </motion.div>
