@@ -8,10 +8,12 @@ import { Products } from "@/components/products";
 import { CTA } from "@/components/cta";
 import { Footer } from "@/components/footer";
 import { ScrollEffects } from "@/components/scroll-effects";
+import { StarField } from "@/components/star-field";
 
 export default function Home() {
   return (
     <main className="relative bg-[#020205] text-white">
+      <StarField />
       <ScrollEffects />
       <Navbar />
       

@@ -50,100 +50,105 @@ export function ScrollEffects() {
         },
       });
 
-      // 3D Z-Scrolling slides choreography
+      // 2D Scale/Opacity Zoom with display: none toggling
       const slides = gsap.utils.toArray(".z-slide") as HTMLElement[];
       const totalSlides = slides.length;
 
       if (totalSlides > 0) {
-        // Initialize initial Z positions for slides using autoAlpha (combines opacity & visibility)
-        slides.forEach((slide, index) => {
-          if (index > 0) {
-            gsap.set(slide, { z: -1200, scale: 0.5, autoAlpha: 0 });
-          } else {
-            gsap.set(slide, { z: 0, scale: 1, autoAlpha: 1 });
-          }
-        });
-
-        // Master Z-Scroll Timeline
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: ".z-scroll-container",
-            start: "top top",
-            end: () => `+=${totalSlides * 130}%`,
-            pin: true,
-            scrub: 1.2,
-            invalidateOnRefresh: true,
-            anticipatePin: 1,
-            preventOverlaps: true,
-            fastScrollEnd: true,
-            // Force hero back to fully visible when scrolling back to top
-            onLeaveBack: () => {
-              gsap.set(slides[0], { z: 0, scale: 1, autoAlpha: 1, clearProps: "transform,opacity,visibility" });
-            },
-            // Clamp hero opacity during slow scrub near the top boundary
-            onUpdate: (self) => {
-              if (self.progress < 0.02) {
-                gsap.set(slides[0], { autoAlpha: 1 });
-              }
-            },
-          },
-        });
-
-        // Sequence slides and their internal scrolls
-        for (let i = 0; i < totalSlides; i++) {
-          const slide = slides[i];
-
-          // A. Process horizontal scroll inside slide (Special Case)
+        // 1. Read all slide dimensions first while they are visible
+        const slideData = slides.map((slide) => {
           const processContainer = slide.querySelector(
             ".process-scroll-container",
           ) as HTMLElement;
+
           if (processContainer) {
             const scrollWidth = processContainer.scrollWidth;
             const scrollAmount = -(scrollWidth - window.innerWidth + 100);
-            if (scrollAmount < 0) {
-              tl.to(processContainer, {
-                x: scrollAmount,
-                duration: 2.5,
-                ease: "none",
-                force3D: true,
-              });
-            }
+            return {
+              type: "horizontal",
+              container: processContainer,
+              scrollAmount,
+            };
           } else {
-            // B. Generic vertical scroll for tall slides (General Case)
             let totalContentHeight = 0;
             const children = Array.from(slide.children) as HTMLElement[];
             children.forEach((child) => {
               totalContentHeight +=
                 Math.max(child.scrollHeight, child.offsetHeight) || 0;
             });
-
             const scrollAmount = totalContentHeight - window.innerHeight;
-            if (scrollAmount > 0) {
-              // Scroll all children vertically
-              tl.to(children, {
-                y: -scrollAmount - 60, // Scroll past with safety padding
+            const centeringOffset = (window.innerHeight - totalContentHeight) / 2;
+            return {
+              type: "vertical",
+              children,
+              scrollAmount,
+              centeringOffset,
+            };
+          }
+        });
+
+        // 2. Initialize initial positions and display properties
+        slides.forEach((slide, index) => {
+          if (index > 0) {
+            gsap.set(slide, { display: "none", scale: 0.1, opacity: 0 });
+          } else {
+            gsap.set(slide, { display: "block", scale: 1, opacity: 1 });
+          }
+        });
+
+        // 3. Master Z-Scroll Timeline
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".z-scroll-container",
+            start: "top top",
+            end: () => `+=${totalSlides * 130}%`,
+            pin: true,
+            pinType: "transform",
+            scrub: 0.5,
+            invalidateOnRefresh: true,
+            anticipatePin: 1,
+          },
+        });
+
+        // 4. Sequence slides and their internal scrolls
+        for (let i = 0; i < totalSlides; i++) {
+          const slide = slides[i];
+          const data = slideData[i];
+
+          // A. Process scroll inside slide
+          if (data.type === "horizontal" && data.container && data.scrollAmount < 0) {
+            tl.to(data.container, {
+              x: data.scrollAmount,
+              duration: 2.5,
+              ease: "none",
+              force3D: true,
+            });
+          } else if (data.type === "vertical" && data.children) {
+            if (data.scrollAmount > 0) {
+              tl.to(data.children, {
+                y: -data.scrollAmount - 60, // Scroll past with safety padding
                 duration: 2.5,
                 ease: "none",
                 force3D: true,
               });
             } else {
               // Center children vertically on screen if content height is less than viewport height
-              const centeringOffset =
-                (window.innerHeight - totalContentHeight) / 2;
-              gsap.set(children, { y: centeringOffset });
+              gsap.set(data.children, { y: data.centeringOffset });
             }
           }
 
-          // C. Slide transitions using autoAlpha and hardware acceleration (force3D)
+          // B. Slide transitions
           if (i < totalSlides - 1) {
             const nextSlide = slides[i + 1];
+
+            // Turn next slide visible at start of transition
+            tl.set(nextSlide, { display: "block" }, `transition-${i}`);
 
             tl.to(
               slide,
               {
-                z: 350,
-                scale: 1.3,
-                autoAlpha: 0,
+                scale: 2.2,
+                opacity: 0,
                 duration: 1.5,
                 ease: "none",
                 force3D: true,
@@ -154,15 +159,17 @@ export function ScrollEffects() {
             tl.to(
               nextSlide,
               {
-                z: 0,
                 scale: 1,
-                autoAlpha: 1,
+                opacity: 1,
                 duration: 1.5,
                 ease: "none",
                 force3D: true,
               },
               `transition-${i}`,
             );
+
+            // Hide previous slide at the end of transition
+            tl.set(slide, { display: "none" }, `transition-${i}+=1.5`);
           }
         }
       }

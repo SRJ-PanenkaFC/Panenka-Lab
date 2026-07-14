@@ -25,14 +25,16 @@ export function SmoothScrolling({ children }: { children: React.ReactNode }) {
 
     // Sync Lenis directly with GSAP ticker for perfect per-frame alignment.
     // This eliminates micro-jitter caused by two separate RAF loops.
-    gsap.ticker.add((time) => {
+    const updateLenis = (time: number) => {
       lenis.raf(time * 1000);
-    });
+    };
+
+    gsap.ticker.add(updateLenis);
     gsap.ticker.lagSmoothing(0);
 
     return () => {
       lenis.off("scroll", ScrollTrigger.update);
-      gsap.ticker.remove((time) => lenis.raf(time * 1000));
+      gsap.ticker.remove(updateLenis);
       lenis.destroy();
     };
   }, []);

@@ -16,7 +16,8 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: "Panenka Lab | Next-Level Software Engineering & Experience Design",
-  description: "Panenka Lab builds premium digital experiences, high-performance software systems, Web3 architectures, and custom AI integrations.",
+  description:
+    "Panenka Lab builds premium digital experiences, high-performance software systems, Web3 architectures, and custom AI integrations.",
 };
 
 import { SmoothScrolling } from "@/components/smooth-scrolling";
@@ -33,11 +34,10 @@ export default function RootLayout({
       className={`${syne.variable} ${plusJakartaSans.variable} h-full antialiased overflow-x-hidden w-full scroll-smooth`}
     >
       <body className="min-h-full flex flex-col bg-[#030307] text-white overflow-x-hidden w-full font-sans antialiased">
-        {/* <Particles /> */}
+        <Particles />
         <div className="fixed inset-0 bg-noise pointer-events-none z-[100]" />
         <SmoothScrolling>{children}</SmoothScrolling>
       </body>
     </html>
   );
 }
-
