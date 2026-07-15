@@ -9,7 +9,7 @@ export function ScrollEffects() {
 
   useEffect(() => {
     setMounted(true);
-    
+
     // Setup GSAP animations after mount
     const ctx = gsap.context(() => {
       // Global Progress Bar
@@ -49,6 +49,130 @@ export function ScrollEffects() {
           scrub: true,
         },
       });
+
+      // 2D Scale/Opacity Zoom with display: none toggling
+      const slides = gsap.utils.toArray(".z-slide") as HTMLElement[];
+      const totalSlides = slides.length;
+
+      if (totalSlides > 0) {
+        // 1. Read all slide dimensions first while they are visible
+        const slideData = slides.map((slide) => {
+          const processContainer = slide.querySelector(
+            ".process-scroll-container",
+          ) as HTMLElement;
+
+          if (processContainer) {
+            const scrollWidth = processContainer.scrollWidth;
+            const scrollAmount = -(scrollWidth - window.innerWidth + 100);
+            return {
+              type: "horizontal",
+              container: processContainer,
+              scrollAmount,
+            };
+          } else {
+            let totalContentHeight = 0;
+            const children = Array.from(slide.children) as HTMLElement[];
+            children.forEach((child) => {
+              totalContentHeight +=
+                Math.max(child.scrollHeight, child.offsetHeight) || 0;
+            });
+            const scrollAmount = totalContentHeight - window.innerHeight;
+            const centeringOffset = (window.innerHeight - totalContentHeight) / 2;
+            return {
+              type: "vertical",
+              children,
+              scrollAmount,
+              centeringOffset,
+            };
+          }
+        });
+
+        // 2. Initialize initial positions and display properties
+        slides.forEach((slide, index) => {
+          if (index > 0) {
+            gsap.set(slide, { display: "none", scale: 0.1, opacity: 0 });
+          } else {
+            gsap.set(slide, { display: "block", scale: 1, opacity: 1 });
+          }
+        });
+
+        // 3. Master Z-Scroll Timeline
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".z-scroll-container",
+            start: "top top",
+            end: () => `+=${totalSlides * 130}%`,
+            pin: true,
+            pinType: "transform",
+            scrub: 0.5,
+            invalidateOnRefresh: true,
+            anticipatePin: 1,
+          },
+        });
+
+        // 4. Sequence slides and their internal scrolls
+        for (let i = 0; i < totalSlides; i++) {
+          const slide = slides[i];
+          const data = slideData[i];
+
+          // A. Process scroll inside slide
+          if (data.type === "horizontal" && data.container && data.scrollAmount < 0) {
+            tl.to(data.container, {
+              x: data.scrollAmount,
+              duration: 2.5,
+              ease: "none",
+              force3D: true,
+            });
+          } else if (data.type === "vertical" && data.children) {
+            if (data.scrollAmount > 0) {
+              tl.to(data.children, {
+                y: -data.scrollAmount - 60, // Scroll past with safety padding
+                duration: 2.5,
+                ease: "none",
+                force3D: true,
+              });
+            } else {
+              // Center children vertically on screen if content height is less than viewport height
+              gsap.set(data.children, { y: data.centeringOffset });
+            }
+          }
+
+          // B. Slide transitions
+          if (i < totalSlides - 1) {
+            const nextSlide = slides[i + 1];
+
+            // Turn next slide visible at start of transition
+            tl.set(nextSlide, { display: "block" }, `transition-${i}`);
+
+            tl.to(
+              slide,
+              {
+                scale: 2.2,
+                opacity: 0,
+                duration: 1.5,
+                ease: "none",
+                force3D: true,
+              },
+              `transition-${i}`,
+            );
+
+            tl.to(
+              nextSlide,
+              {
+                scale: 1,
+                opacity: 1,
+                duration: 1.5,
+                ease: "none",
+                force3D: true,
+              },
+              `transition-${i}`,
+            );
+
+            // Hide previous slide at the end of transition
+            tl.set(slide, { display: "none" }, `transition-${i}+=1.5`);
+          }
+        }
+      }
     });
 
     return () => ctx.revert();
@@ -68,14 +192,20 @@ export function ScrollEffects() {
 
       {/* Floating Interactive Shape 2 (Mid Left) */}
       <div className="scroll-shape-2 fixed top-[50%] left-[5%] w-24 h-24 pointer-events-none z-[-1] opacity-20">
-        <svg viewBox="0 0 100 100" className="w-full h-full fill-none stroke-blue-500 stroke-[2]">
+        <svg
+          viewBox="0 0 100 100"
+          className="w-full h-full fill-none stroke-blue-500 stroke-[2]"
+        >
           <path d="M50 0 L100 50 L50 100 L0 50 Z" />
         </svg>
       </div>
 
       {/* Floating Interactive Shape 3 (Bottom Right) */}
       <div className="scroll-shape-1 fixed bottom-[10%] right-[10%] w-40 h-40 pointer-events-none z-[-1] opacity-10">
-        <svg viewBox="0 0 100 100" className="w-full h-full fill-none stroke-purple-500 stroke-[1]">
+        <svg
+          viewBox="0 0 100 100"
+          className="w-full h-full fill-none stroke-purple-500 stroke-[1]"
+        >
           <circle cx="50" cy="50" r="40" strokeDasharray="10 10" />
           <circle cx="50" cy="50" r="20" />
         </svg>

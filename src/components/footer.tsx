@@ -98,19 +98,25 @@ const navigation = {
 
 export function Footer() {
   return (
-    <footer className="bg-[#050505] border-t border-white/10 py-16">
+    <footer className="bg-[#020205] border-t border-white/5 py-16 relative z-10">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-10 md:gap-12 mb-16">
           <div className="lg:col-span-2">
             <Link
               href="/"
-              className="text-2xl font-bold tracking-tighter inline-block mb-6 text-white"
+              className="flex items-center gap-2 mb-6 group"
             >
-              Panenka<span className="text-purple-500">Lab.</span>
+              <span className="font-display text-2xl font-extrabold tracking-tighter text-white uppercase">
+                PANENKA
+                <span className="text-stroke font-light ml-1 text-white/50 group-hover:text-white/90 transition-colors duration-300">LAB</span>
+              </span>
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+              </span>
             </Link>
-            <p className="text-gray-400 max-w-sm mb-8">
-              A next-level future-based software development company bridging
-              the gap between imagination and reality.
+            <p className="text-gray-400 max-w-sm mb-8 font-light text-sm leading-relaxed">
+              We serve next-level experiences in software development. Transforming complex engineering into tactile digital ecosystems.
             </p>
             <div className="flex gap-4">
               {navigation.social.map((item) => (

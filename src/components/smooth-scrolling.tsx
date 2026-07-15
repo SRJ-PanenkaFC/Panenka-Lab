@@ -10,25 +10,32 @@ gsap.registerPlugin(ScrollTrigger);
 export function SmoothScrolling({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      duration: 1.8,
+      // Expo ease-out: long silky deceleration tail, feels premium
+      easing: (t) => t === 1 ? 1 : 1 - Math.pow(2, -10 * t),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      touchMultiplier: 2,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.8,
+      infinite: false,
     });
 
     lenis.on("scroll", ScrollTrigger.update);
 
-    gsap.ticker.add((time) => {
+    // Sync Lenis directly with GSAP ticker for perfect per-frame alignment.
+    // This eliminates micro-jitter caused by two separate RAF loops.
+    const updateLenis = (time: number) => {
       lenis.raf(time * 1000);
-    });
+    };
 
+    gsap.ticker.add(updateLenis);
     gsap.ticker.lagSmoothing(0);
 
     return () => {
+      lenis.off("scroll", ScrollTrigger.update);
+      gsap.ticker.remove(updateLenis);
       lenis.destroy();
-      gsap.ticker.remove(lenis.raf);
     };
   }, []);
 
